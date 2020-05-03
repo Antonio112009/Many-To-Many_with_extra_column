@@ -25,7 +25,7 @@ _Warning! The project was developed in the Intellij. It may not be compatible wi
 
 ### Current issues
 
-1. Unable to connect 2 or more object (that are in the database). Test number 3.
+1. [FIXED] Unable to connect 2 or more object (that are in the database). Test number 3.
 
 Error log:
 ```
@@ -33,3 +33,5 @@ org.springframework.orm.jpa.JpaSystemException: Could not set field value [SHORT
 setter of com.antonio112009.manyToMany.entity.PostTagId.tagId; nested exception is org.hibernate.PropertyAccessException: Could not set field value [SHORT_CIRCUIT_INDICATOR] 
 value by reflection : [class com.antonio112009.manyToMany.entity.PostTagId.tagId] setter of com.antonio112009.manyToMany.entity.PostTagId.tagId
 ```
+
+2. Unable to delete object with multiple objects.

@@ -1,21 +1,34 @@
 package com.antonio112009.manyToMany.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
+
 
 @Entity
 @Table
-@Data
+@Getter
+@Setter
+@ToString(exclude = "posts")
 public class Tag {
+
+    public Tag() { }
+    public Tag(String name) {
+        this.name = name;
+    }
+
 
     @Id
     @GeneratedValue
     private Long id;
 
+    @Column
     private String name;
 
     @OneToMany(
@@ -25,8 +38,8 @@ public class Tag {
     )
     private List<PostTag> posts = new ArrayList<>();
 
-    public void addPost(Post post) {
-        PostTag postTag = new PostTag(post, this);
+    public void addPost(Post post, String createdOn) {
+        PostTag postTag = new PostTag(post, this, createdOn);
         posts.add(postTag);
         post.getTags().add(postTag);
     }
@@ -43,5 +56,29 @@ public class Tag {
                 postTag.setTag(null);
             }
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (this == obj) {
+            return true;
+        }
+
+        if(obj == null) {
+            return false;
+        }
+
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Tag other = (Tag) obj;
+        return id != null && id.equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name);
     }
 }
