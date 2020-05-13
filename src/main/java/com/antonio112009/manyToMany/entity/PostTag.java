@@ -11,7 +11,7 @@ import java.util.Objects;
 @Table
 @Getter
 @Setter
-@ToString(exclude = {"post", "tag"})
+@ToString(exclude = {"tag"})
 public class PostTag {
 
     public PostTag() {}

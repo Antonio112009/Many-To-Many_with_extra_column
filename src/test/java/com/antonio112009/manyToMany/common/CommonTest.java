@@ -13,7 +13,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -199,7 +201,44 @@ public class CommonTest {
 
     @Test
     @Order(6)
-    @DisplayName("deleting tag with posts via tagRepository")
+    @DisplayName("deleting tag with postTag, but not posts via tagRepository")
+    void deleteTagWithPostTagMultiplePosts(){
+        postRepository.saveAll(Arrays.asList(new Post(postTitle1), new Post(postTitle2)));
+        postRepository.flush();
+
+        Tag tag = new Tag(tagName1);
+        for (Post postDB : postRepository.findByTitleIn(Arrays.asList(postTitle1, postTitle2))){
+            tag.addPost(postDB, createdOn);
+        }
+        tagRepository.saveAndFlush(tag);
+
+
+        tag = tagRepository.findByName(tagName1);
+//      If we delete one item... It would miss the following one. I don't know how to perform following code better.
+        tag.removeAllPosts();
+
+//        Alternative:
+//        for (PostTag postTag : new ArrayList<>(tag.getPosts())) {
+//            tag.removePost(postTag.getPost());
+//        }
+        tagRepository.saveAndFlush(tag);
+
+//      Let's delete tag WITHOUT deleting posts
+        tagRepository.deleteByName(tagName1);
+        tagRepository.flush();
+
+        tag = tagRepository.findByName(tagName1);
+
+        //Testing
+        assertNull(tag, "checking that tag is deleted");
+        assertEquals(0, postTagRepository.findAll().size(), "checking that postTag table is deleted");
+        assertEquals(2, postRepository.findAll().size(), "checking that post table is deleted");
+    }
+
+
+    @Test
+    @Order(7)
+    @DisplayName("deleting tag with posts (and postTag) connection via tagRepository")
     void deleteTagWithMultiplePosts(){
         postRepository.saveAll(Arrays.asList(new Post(postTitle1), new Post(postTitle2)));
         postRepository.flush();
@@ -210,12 +249,8 @@ public class CommonTest {
         }
         tagRepository.saveAndFlush(tag);
 
-        tag = tagRepository.findByName(tagName1);
-        for(PostTag postTag : tag.getPosts()){
-            tag.removePost(postTag.getPost());
-        }
-        tagRepository.saveAndFlush(tag);
 
+//      Let's delete tag WITHOUT deleting posts
         tagRepository.deleteByName(tagName1);
         tagRepository.flush();
 
@@ -223,8 +258,7 @@ public class CommonTest {
 
         //Testing
         assertNull(tag, "checking that tag is deleted");
-        assertEquals(0, postRepository.findAll().size(), "checking that postTag table is deleted");
+        assertEquals(0, postTagRepository.findAll().size(), "checking that postTag table is deleted");
         assertEquals(0, postRepository.findAll().size(), "checking that post table is deleted");
     }
-
 }

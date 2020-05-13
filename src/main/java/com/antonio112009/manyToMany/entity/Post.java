@@ -44,16 +44,21 @@ public class Post {
     }
 
     public void removeTag(Tag tag) {
-        for (Iterator<PostTag> iterator = tags.iterator();
-             iterator.hasNext(); ) {
-            PostTag postTag = iterator.next();
-
+        for(PostTag postTag : tag.getPosts()){
             if (postTag.getPost().equals(this) && postTag.getTag().equals(tag)) {
-                iterator.remove();
                 postTag.getTag().getPosts().remove(postTag);
                 postTag.setPost(null);
                 postTag.setTag(null);
             }
+        }
+    }
+
+    public void removeAllTags(){
+        for(PostTag postTag : new ArrayList<>(tags)) {
+            tags.remove(postTag);
+            postTag.getPost().getTags().remove(postTag);
+            postTag.setPost(null);
+            postTag.setTag(null);
         }
     }
 

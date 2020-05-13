@@ -10,6 +10,7 @@ import java.util.Objects;
 @Embeddable
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostTagId implements Serializable {

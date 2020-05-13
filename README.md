@@ -8,6 +8,9 @@
 
 This is an example of the project based on Vlad Mihalcea's post: [The best way to map a many-to-many association with extra columns when using JPA and Hibernate](https://vladmihalcea.com/the-best-way-to-map-a-many-to-many-association-with-extra-columns-when-using-jpa-and-hibernate/)
 
+Stackoverflow questions:
+Russian: 
+
 ### Before running the project
 
 _Warning! The project was developed in the Intellij. It may not be compatible with Eclipse._
@@ -23,7 +26,7 @@ _Warning! The project was developed in the Intellij. It may not be compatible wi
 3. Open `PostRepositoryTest`
 4. On the line 19 you will find run button (green arrow right). Press it and watch console.
 
-### Current issues
+### Fixed issues
 
 1. [FIXED] Unable to connect 2 or more object (that are in the database). Test number 3.
 
@@ -34,4 +37,8 @@ setter of com.antonio112009.manyToMany.entity.PostTagId.tagId; nested exception 
 value by reflection : [class com.antonio112009.manyToMany.entity.PostTagId.tagId] setter of com.antonio112009.manyToMany.entity.PostTagId.tagId
 ```
 
-2. Unable to delete object with multiple objects.
+2. [FIXED with crutch] Unable to delete object with multiple objects.
+
+### Current issues
+
+1. if we delete tag by calling `deleteByName(tagName)`, it should delete tag AND remove posts connected to it

@@ -15,7 +15,8 @@ import java.util.Objects;
 @Table
 @Getter
 @Setter
-@ToString(exclude = "posts")
+@ToString
+//@ToString(exclude = "posts")
 public class Tag {
 
     public Tag() { }
@@ -45,18 +46,25 @@ public class Tag {
     }
 
     public void removePost(Post post) {
-        for (Iterator<PostTag> iterator = posts.iterator();
-             iterator.hasNext(); ) {
-            PostTag postTag = iterator.next();
-
+        for(PostTag postTag : post.getTags()){
             if (postTag.getPost().equals(post) && postTag.getTag().equals(this)) {
-                iterator.remove();
+                posts.remove(postTag);
                 postTag.getPost().getTags().remove(postTag);
                 postTag.setPost(null);
                 postTag.setTag(null);
             }
         }
     }
+
+    public void removeAllPosts(){
+        for(PostTag postTag : new ArrayList<>(posts)) {
+            posts.remove(postTag);
+            postTag.getPost().getTags().remove(postTag);
+            postTag.setPost(null);
+            postTag.setTag(null);
+        }
+    }
+
 
     @Override
     public boolean equals(Object obj) {
